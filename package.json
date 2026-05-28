@@ -1,0 +1,23 @@
+{
+  "name": "university-database",
+  "version": "1.0.0",
+  "description": "Backend server for the **University Accommodation System Android App**, built using **Node.js, Express, and MySQL**.   This server manages student accommodation data such as students, leases, rooms, invoices, and inspections.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"npm install --prefix frontend && npm audit fix --prefix frontend && npm run build --prefix frontend && npm install --prefix backend-server && npm audit fix --prefix backend-server",
+    "start":"npm start --prefix backend-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbhijeetNagar56/University-Database.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AbhijeetNagar56/University-Database/issues"
+  },
+  "homepage": "https://github.com/AbhijeetNagar56/University-Database#readme"
+}

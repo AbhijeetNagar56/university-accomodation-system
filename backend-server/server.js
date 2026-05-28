@@ -101,20 +101,20 @@ const isAuthenticated = (req, res, next) => {
 
 // ================= ROUTES =================
 
-app.use("/students", isAuthenticated, studentsRoutes);
-app.use("/advisers", isAuthenticated, advisersRoutes);
-app.use("/courses", isAuthenticated, coursesRoutes);
-app.use("/staff", isAuthenticated, residenceStaffRoutes);
-app.use("/halls", isAuthenticated, hallsRoutes);
-app.use("/hallrooms", isAuthenticated, hallRoomsRoutes);
-app.use("/apartments", isAuthenticated, apartmentsRoutes);
-app.use("/apartmentrooms", isAuthenticated, apartmentRoomsRoutes);
-app.use("/leases", isAuthenticated, leasesRoutes);
-app.use("/invoices", isAuthenticated, invoicesRoutes);
-app.use("/inspections", isAuthenticated, inspectionsRoutes);
-app.use("/kin", isAuthenticated, kinRoutes);
-app.use("/places", isAuthenticated, places);
-app.use("/reports", isAuthenticated, reportsRoutes);
+app.use("/api/students", isAuthenticated, studentsRoutes);
+app.use("/api/advisers", isAuthenticated, advisersRoutes);
+app.use("/api/courses", isAuthenticated, coursesRoutes);
+app.use("/api/staff", isAuthenticated, residenceStaffRoutes);
+app.use("/api/halls", isAuthenticated, hallsRoutes);
+app.use("/api/hallrooms", isAuthenticated, hallRoomsRoutes);
+app.use("/api/apartments", isAuthenticated, apartmentsRoutes);
+app.use("/api/apartmentrooms", isAuthenticated, apartmentRoomsRoutes);
+app.use("/api/leases", isAuthenticated, leasesRoutes);
+app.use("/api/invoices", isAuthenticated, invoicesRoutes);
+app.use("/api/inspections", isAuthenticated, inspectionsRoutes);
+app.use("/api/kin", isAuthenticated, kinRoutes);
+app.use("/api/places", isAuthenticated, places);
+app.use("/api/reports", isAuthenticated, reportsRoutes);
 
 // ================= QUERY =================
 
@@ -200,6 +200,10 @@ app.post("/upload-csv/:table", isAuthenticated, upload.single("file"), async (re
 
 app.use((err, _req, res, _next) => {
   res.status(500).json({ error: err.message });
+});
+
+app.get('/randomsecretpath', (req, res) => {
+  res.status(200).sendFile(path.join(__dirname, "./public/index.html"))
 });
 
 app.get(/^\/(?!ping|login|logout|query|upload-csv|students|advisers|courses|staff|halls|hallrooms|apartments|apartmentrooms|leases|invoices|inspections|kin|places|reports).*/, (_req, res) => {
