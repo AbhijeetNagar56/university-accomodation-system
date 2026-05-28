@@ -78,7 +78,7 @@ app.get("/ping", (req, res) => {
 
 // ================= AUTH =================
 
-app.post("/login", (req, res) => {
+app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
 
   if (username === ADMIN_USER && password === ADMIN_PASS) {
@@ -89,7 +89,7 @@ app.post("/login", (req, res) => {
   res.status(401).json({ error: "Invalid credentials" });
 });
 
-app.post("/logout", (req, res) => {
+app.post("/api/logout", (req, res) => {
   req.session.destroy();
   res.json({ message: "Logged out" });
 });
