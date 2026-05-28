@@ -78,7 +78,7 @@ app.get("/ping", (req, res) => {
 
 // ================= AUTH =================
 
-app.post("/api/login", (req, res) => {
+app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
   if (username === ADMIN_USER && password === ADMIN_PASS) {
@@ -89,7 +89,7 @@ app.post("/api/login", (req, res) => {
   res.status(401).json({ error: "Invalid credentials" });
 });
 
-app.post("/api/logout", (req, res) => {
+app.post("/logout", (req, res) => {
   req.session.destroy();
   res.json({ message: "Logged out" });
 });
@@ -101,20 +101,20 @@ const isAuthenticated = (req, res, next) => {
 
 // ================= ROUTES =================
 
-app.use("/api/students", isAuthenticated, studentsRoutes);
-app.use("/api/advisers", isAuthenticated, advisersRoutes);
-app.use("/api/courses", isAuthenticated, coursesRoutes);
-app.use("/api/staff", isAuthenticated, residenceStaffRoutes);
-app.use("/api/halls", isAuthenticated, hallsRoutes);
-app.use("/api/hallrooms", isAuthenticated, hallRoomsRoutes);
-app.use("/api/apartments", isAuthenticated, apartmentsRoutes);
-app.use("/api/apartmentrooms", isAuthenticated, apartmentRoomsRoutes);
-app.use("/api/leases", isAuthenticated, leasesRoutes);
-app.use("/api/invoices", isAuthenticated, invoicesRoutes);
-app.use("/api/inspections", isAuthenticated, inspectionsRoutes);
-app.use("/api/kin", isAuthenticated, kinRoutes);
-app.use("/api/places", isAuthenticated, places);
-app.use("/api/reports", isAuthenticated, reportsRoutes);
+app.use("/students", isAuthenticated, studentsRoutes);
+app.use("/advisers", isAuthenticated, advisersRoutes);
+app.use("/courses", isAuthenticated, coursesRoutes);
+app.use("/staff", isAuthenticated, residenceStaffRoutes);
+app.use("/halls", isAuthenticated, hallsRoutes);
+app.use("/hallrooms", isAuthenticated, hallRoomsRoutes);
+app.use("/apartments", isAuthenticated, apartmentsRoutes);
+app.use("/apartmentrooms", isAuthenticated, apartmentRoomsRoutes);
+app.use("/leases", isAuthenticated, leasesRoutes);
+app.use("/invoices", isAuthenticated, invoicesRoutes);
+app.use("/inspections", isAuthenticated, inspectionsRoutes);
+app.use("/kin", isAuthenticated, kinRoutes);
+app.use("/places", isAuthenticated, places);
+app.use("/reports", isAuthenticated, reportsRoutes);
 
 // ================= QUERY =================
 
