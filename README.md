@@ -6,11 +6,9 @@ This server manages student accommodation data such as students, leases, rooms, 
 ---
 
 # Quick Links
-**Web link:**
-https://university-database.onrender.com <br>
 
 **Android App:**
-./Android/udba.apk <br>
+android app (udba.apk)<br>
 
 **ER Diagram:**  
 https://dbdiagram.io/d/69bbc8a978c6c4bc7a1fe414  <br>
