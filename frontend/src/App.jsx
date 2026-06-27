@@ -20,6 +20,7 @@ import NextOfKin from './pages/NextOfKin';
 import Staff from './pages/Staff';
 import Courses from './pages/Courses';
 import Reports from './pages/Reports';
+import Query from './pages/Query';
 
 /**
  * ProtectedRoute — redirects to /login if not authenticated
@@ -29,7 +30,7 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--surface-900)]">
+      <div className="min-h-screen flex items-center justify-center bg-(--surface-900)">
         <div className="animate-spin w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full" />
       </div>
     );
@@ -79,7 +80,8 @@ const App = () => {
           <Route path="/kin" element={<ProtectedRoute><NextOfKin /></ProtectedRoute>} />
           <Route path="/staff" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
           <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
-          <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />\
+          <Route path="/query-console" element={<ProtectedRoute><Query /></ProtectedRoute>} />
 
           {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />

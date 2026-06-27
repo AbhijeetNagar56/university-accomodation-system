@@ -8,7 +8,7 @@ import {
   LayoutDashboard, Users, Building2, Building, FileText,
   Receipt, ClipboardCheck, UserCog, BarChart3, BookOpen,
   LogOut, Menu, X, GraduationCap, ChevronRight, UserRoundSearch,
-  DoorOpen, BedDouble, MapPinned, HeartHandshake,
+  DoorOpen, BedDouble, MapPinned, HeartHandshake, GamepadDirectional
 } from 'lucide-react';
 
 const navItems = [
@@ -27,6 +27,7 @@ const navItems = [
   { to: '/staff', icon: UserCog, label: 'Staff' },
   { to: '/courses', icon: BookOpen, label: 'Courses' },
   { to: '/reports', icon: BarChart3, label: 'Reports' },
+  { to: '/query-console', icon: GamepadDirectional, label: 'Query' },
 ];
 
 const Layout = ({ children }) => {
