@@ -17,8 +17,33 @@ https://dbdiagram.io/d/69bbc8a978c6c4bc7a1fe414  <br>
 https://miro.com/app/board/uXjVGqHM6t4=/?share_link_id=403010924186 <br>
 
 --- 
-# High level Diagram
-<img src="./public/Database.png" alt="not ad">
+
+# Getting started
+1. Use Repository: add the .env varibles. <br>
+  **.env** to backend-server
+  ```
+  DATABASE_URL=
+  PORT=
+  ADMIN_USER=
+  ADMIN_PASS=
+  SESSION_SECRET=<br>
+  ```
+  **commands**
+   ```
+   git clone https://github.com/AbhijeetNagar56/University-Database.git
+   cd University-Database
+   npm run build
+   npm start
+   ```
+
+2. Use Docker image: add a db_pass.txt.
+   ```
+   git clone https://github.com/AbhijeetNagar56/University-Database.git
+   cd University-Database
+   docker-compose -f app.yaml up -d
+   ```
+
+---
 
 **Login Page → Query Console Sample Query**
 
