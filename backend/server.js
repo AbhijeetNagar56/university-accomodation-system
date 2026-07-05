@@ -41,7 +41,6 @@ const SESSION_SECRET = process.env.SESSION_SECRET || "fallback_secret";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadsDir = path.join(__dirname, "uploads");
-const frontendDistDir = path.join(__dirname, "../frontend/dist");
 
 // create uploads folder
 if (!fs.existsSync(uploadsDir)) {
@@ -54,11 +53,10 @@ const sessionStore = new MySQLStore({}, pool);
 
 // middlewares
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
 }));
 app.use(express.json());
-app.use(express.static(frontendDistDir));
-app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.use(session({
   key: "session_cookie_name",
@@ -205,7 +203,7 @@ app.use((err, _req, res, _next) => {
 });
 
 app.get('/*', (_req, res) => {
-  res.sendFile(path.join(frontendDistDir, "index.html"));
+  res.status(200).json({msg: "you are lost! go to /."});
 });
 
 // ================= START =================

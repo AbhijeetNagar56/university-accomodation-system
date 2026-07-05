@@ -4,8 +4,6 @@ WORKDIR /app
 
 # Copy package files first for cache
 COPY package*.json ./
-COPY frontend/package*.json ./frontend/
-COPY backend-server/package*.json ./backend-server/
 
 # Install root deps
 RUN npm install
@@ -13,8 +11,13 @@ RUN npm install
 # Copy source
 COPY . .
 
-# Build frontend
-RUN npm run build
+RUN apk add --no-cache curl
+
+ENV DATABASE_URL=
+ENV ADMIN_USER=
+ENV ADMIN_PASS=
+ENV SESSION_SECRET=
+ENV FRONTEND_URL=
 
 EXPOSE 3000
 

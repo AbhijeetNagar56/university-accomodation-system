@@ -1,7 +1,6 @@
-
 services:
   database:
-    container_name: udba_mysql2
+    container_name: uas_db
     image: mysql:8
     ports:
       - "3306:3306"
@@ -22,47 +21,56 @@ services:
       retries: 5
 
     networks:
-      - udba
+      - uas-network
 
-  app:
-    image: ghcr.io/abhijeetnagar56/university-dba:latest
-
+  backend:
+    container_name: uas-backend
+    image: ghcr.io/abhijeetnagar56/university-accomodation-system-backend:latest
     environment:
-      PORT: 3000
       SESSION_SECRET: your-secret
       ADMIN_USER: admin
       ADMIN_PASS: admin123
+      FRONTEND_URL: http://localhost:8080
       DB_HOST: database
       DB_PORT: 3306
       DB_NAME: university
       DB_USER: root
       DB_PASSWORD_FILE: /run/secrets/mysql_root_password
-
-    secrets:
-      - mysql_root_password
-
     depends_on:
-       - database
-
+      database:
+        condition: service_healthy
     ports:
       - "3000:3000"
-      
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/ping"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
-
     networks:
-      - udba
+      - uas-network
+    secrets:
+      - mysql_root_password
+
+  frontend:
+    container_name: uas-frontend
+    image: ghcr.io/abhijeetnagar56/university-accomodation-system-frontend:latest
+    environment:
+      VITE_API_BASE_URL: http://localhost:3000
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - uas-network
 
 secrets:
   mysql_root_password:
     file: ./db_pass.txt
 
 networks:
-  udba:
+  uas-network:
 
 volumes:
   mysql_data:
