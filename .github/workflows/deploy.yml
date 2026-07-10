@@ -47,8 +47,8 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.actor }}/university-accomodation-system-backend:latest
-            ghcr.io/${{ github.actor }}/university-accomodation-system-backend:${{ github.sha }}
+            ghcr.io/abhijeetnagar56/university-accomodation-system-backend:latest
+            ghcr.io/abhijeetnagar56/university-accomodation-system-backend:${{ github.sha }}
 
   # ==========================================
   # JOB 2: FRONTEND PIPELINE
@@ -93,8 +93,8 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.actor }}/university-accomodation-system-frontend:latest
-            ghcr.io/${{ github.actor }}/university-accomodation-system-frontend:${{ github.sha }}
+            ghcr.io/abhijeetnagar56/university-accomodation-system-frontend:latest
+            ghcr.io/abhijeetnagar56/university-accomodation-system-frontend:${{ github.sha }}
 
   # ==========================================
   # JOB 3: DEPLOYMENT TRIGGER
