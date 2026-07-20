@@ -1,11 +1,12 @@
 ---
-- name: Configure Production Application Server
+- name: Configure Application Server and Launch Docker Stack
   hosts: all
   become: true
   tasks:
     - name: Update apt package cache
       apt:
         update_cache: yes
+        cache_valid_time: 3600
 
     - name: Install prerequisite packages
       apt:
@@ -14,19 +15,28 @@
           - ca-certificates
           - curl
           - software-properties-common
+          - gnupg
         state: present
 
-    - name: Add Docker GPG key
-      apt_key:
+    - name: Create directory for Docker keyrings
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker official GPG key
+      get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
 
-    - name: Add Docker Repository
+    - name: Add Docker APT repository
       apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu jammy stable"
         state: present
+        filename: docker
 
-    - name: Install Docker Engine & Compose plugin
+    - name: Install Docker Engine and Compose plugin
       apt:
         name:
           - docker-ce
@@ -34,23 +44,29 @@
           - containerd.io
           - docker-compose-plugin
         state: present
+        update_cache: yes
 
-    - name: Ensure Docker service is running
+    - name: Ensure Docker service is running and enabled
       service:
         name: docker
         state: started
         enabled: yes
 
-    - name: Create app deployment directory
+    - name: Create deployment application directory
       file:
         path: /app
         state: directory
         mode: '0755'
+    - name: Create database password file on remote server
+      ansible.builtin.copy:
+        content: "securepass"
+        dest: /app/db_pass.txt
+        mode: '0600'
 
-    - name: Copy project compose file to remote target
+    - name: Copy Compose configuration to host target
       copy:
         src: ../compose.yaml
         dest: /app/compose.yaml
 
-    - name: Boot application cluster via Docker Compose
-      shell: docker compose -f /app/compose.yaml up -d
+    - name: Launch application containers via Docker Compose
+      command: docker compose -f /app/compose.yaml up -d

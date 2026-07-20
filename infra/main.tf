@@ -1,30 +1,46 @@
 provider "aws" {
-  region = "us-east-1" # Or your closest free-tier region
+  region = "ap-south-1"
 }
 
-# 1. Create a VPC
+# 1. Fetch the latest official Ubuntu 22.04 LTS AMI dynamically for ap-south-1
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical's official AWS Account ID
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-jammy-22.04-amd64-server-*", "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+# 2. VPC Creation
 resource "aws_vpc" "uas_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
-  tags = { Name = "uas-vpc" }
+  tags                 = { Name = "uas-vpc" }
 }
 
-# 2. Public Subnet
+# 3. Public Subnet
 resource "aws_subnet" "uas_public_subnet" {
   vpc_id                  = aws_vpc.uas_vpc.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1a"
-  tags = { Name = "uas-public-subnet" }
+  availability_zone       = "ap-south-1a"
+  tags                    = { Name = "uas-public-subnet" }
 }
 
-# 3. Internet Gateway for Traffic
+# 4. Internet Gateway
 resource "aws_internet_gateway" "uas_gw" {
   vpc_id = aws_vpc.uas_vpc.id
-  tags = { Name = "uas-igw" }
+  tags   = { Name = "uas-igw" }
 }
 
-# 4. Route Table
+# 5. Route Table & Association
 resource "aws_route_table" "uas_rt" {
   vpc_id = aws_vpc.uas_vpc.id
   route {
@@ -38,16 +54,17 @@ resource "aws_route_table_association" "uas_rta" {
   route_table_id = aws_route_table.uas_rt.id
 }
 
-# 5. Security Group (Allows SSH, HTTP, and your custom app ports)
+# 6. Security Group
 resource "aws_security_group" "uas_sg" {
-  name   = "uas-security-group"
-  vpc_id = aws_vpc.uas_vpc.id
+  name        = "uas-security-group"
+  description = "Allow SSH and HTTP traffic"
+  vpc_id      = aws_vpc.uas_vpc.id
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # For learning purposes. Restrict to your IP for prod safety!
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -65,29 +82,29 @@ resource "aws_security_group" "uas_sg" {
   }
 }
 
-# 6. EC2 Instance (Free Tier Eligible)
+# 7. EC2 Instance
 resource "aws_instance" "uas_server" {
-  ami           = "ami-0c7217cdde317cfec" # Ubuntu 22.04 LTS in us-east-1 (Verify for your region)
-  instance_type = "t3.micro"             # Change to "t3.micro" if your region defaults to t3 for free tier
-  subnet_id     = aws_subnet.uas_public_subnet.id
+  ami                    = data.aws_ami.ubuntu.id # Uses dynamic AMI lookup
+  instance_type          = "t3.micro"            # Free Tier eligible in ap-south-1
+  subnet_id              = aws_subnet.uas_public_subnet.id
   vpc_security_group_ids = [aws_security_group.uas_sg.id]
-  key_name      = "uas-key"              # Create this key-pair inside your AWS Console first
+  key_name               = "uas-key"             # Ensure this Key Pair exists in Mumbai console!
 
   root_block_device {
-    volume_size = 20 # Up to 30GB is completely free tier eligible
+    volume_size = 8
     volume_type = "gp3"
   }
 
   tags = { Name = "uas-production-server" }
 }
 
-# 7. S3 Bucket (Free Tier up to 5GB storage)
+# 8. S3 Bucket
 resource "aws_s3_bucket" "uas_assets" {
-  bucket        = "university-system-assets-unique-suffix-2026" # S3 names must be globally unique
+  bucket        = "university-system-assets-unique-suffix-2026"
   force_destroy = true
 }
 
-# Outputs for our Ansible integration script
+# Output
 output "server_public_ip" {
   value = aws_instance.uas_server.public_ip
 }
